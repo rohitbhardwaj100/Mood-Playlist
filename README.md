@@ -1,5 +1,4 @@
 # Mood-Playlist
 <<<<<<< HEAD
-<<<<<<< HEAD
 Tech Stack: HTML + JavaScript + CSS Functionality:Users select a mood <br>(Happy, Sad, Chill, Energetic, etc. Based on mood, curated list of songs appear Add search bar,) 
 >>>>>>>
