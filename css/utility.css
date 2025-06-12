@@ -1,0 +1,90 @@
+.border{
+    border: 2px solid  red;
+    margin: 3px;
+}
+
+.flex{
+    display: flex;
+}
+
+.justify-center{
+    justify-content: center;
+}
+
+.items-center{
+    align-items: center;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin: 15px 20px;
+  flex-wrap: wrap;
+}
+
+.filters button {
+  background-color: #1f1f1f;
+  color: white;
+  border: 1px solid #333;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.filters button:hover {
+  background-color: #333;
+  transform: scale(1.05);
+}
+
+.filters button.active {
+  background-color: #0db760;
+  color: black;
+  font-weight: bold;
+}
+
+
+.bg-black{
+    background-color: black;
+    color: white;
+}
+
+.invert{
+    filter: invert(1);
+}
+
+.bg-grey{
+    background-color: #121212;
+}
+
+.rounded{
+    border-radius: 7px;
+}
+
+.m-1{
+    margin: 5px;
+}
+
+.p-1{
+    padding: 10px;
+}
+
+
+/* For Webkit browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #333; /* Dark color for the thumb */
+    border-radius: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: #222; /* Dark color for the track */
+  }
+  
+  /* For Firefox */
+  scrollbar-color: #333 #222; /* Dark color for the thumb and track in Firefox */
+  
