@@ -53,7 +53,8 @@ function playMusic(track, pause = false) {
     }
 
     const encoded = encodeURIComponent(track);
-    currentSong.src = `${currFolder}/${encodeURIComponent(track)}`;
+    currentSong.src = `songs/${currFolder}/${encodeURIComponent(track)}`;
+
 
     if (!pause) {
         currentSong.play().catch(err => {
