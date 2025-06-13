@@ -1,7 +1,8 @@
-console.log('Lets write JavaScript');
+console.log("Let's write JavaScript");
 let currentSong = new Audio();
 let songs = [];
 let currFolder = "";
+const moods = ["happy", "sad", "chill", "romantic", "workout"]; // ✅ Manually listed
 
 function secondsToMinutesSeconds(seconds) {
     if (isNaN(seconds) || seconds < 0) return "00:00";
@@ -12,45 +13,41 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
     currFolder = folder;
-    console.log("\ud83d\udcc1 Loading folder:", folder);
+    console.log("📁 Loading folder:", folder);
 
-    let a = await fetch(`${folder}/`);
-    let response = await a.text();
-    let div = document.createElement("div");
-    div.innerHTML = response;
+    try {
+        const res = await fetch(`songs/${folder}/info.json`);
+        const info = await res.json();
+        if (!info.songs || !Array.isArray(info.songs)) throw "No song list";
 
-    let as = div.getElementsByTagName("a");
-    songs = [];
-    for (let i = 0; i < as.length; i++) {
-        let href = as[i].href;
-        if (href.endsWith(".mp3")) {
-            let track = decodeURIComponent(href.split(`${folder}/`)[1]);
-            songs.push(track);
+        songs = info.songs;
+
+        const songUL = document.querySelector(".songList ul");
+        songUL.innerHTML = "";
+        for (const song of songs) {
+            songUL.innerHTML += `<li><img class="invert" width="34"src="img/music.svg" alt="">
+                <div class="info"><div>${song}</div><div>ROHIT BHARDWAJ</div></div>
+                <div class="playnow"><span>Play Now</span><img class="invert" src="img/play.svg" alt=""></div>
+            </li>`;
         }
-    }
 
-    let songUL = document.querySelector(".songList ul");
-    songUL.innerHTML = "";
-    for (const song of songs) {
-        songUL.innerHTML += `<li><img class="invert" width="34"src="img/music.svg" alt="">
-            <div class="info"><div>${song}</div><div>ROHIT BHARDAWJ</div></div>
-            <div class="playnow"><span>Play Now</span><img class="invert" src="img/play.svg" alt=""></div>
-        </li>`;
-    }
-
-    Array.from(songUL.getElementsByTagName("li")).forEach(e => {
-        e.addEventListener("click", () => {
-            const track = e.querySelector(".info div").innerText.trim();
-            playMusic(track);
+        Array.from(songUL.getElementsByTagName("li")).forEach(e => {
+            e.addEventListener("click", () => {
+                const track = e.querySelector(".info div").innerText.trim();
+                playMusic(track);
+            });
         });
-    });
 
-    return songs;
+        return songs;
+    } catch (e) {
+        console.warn("⚠ Unable to load songs for:", folder);
+        return [];
+    }
 }
 
 function playMusic(track, pause = false) {
     if (!track) {
-        console.warn("\u26a0 No track specified.");
+        console.warn("⚠ No track specified.");
         return;
     }
 
@@ -69,63 +66,40 @@ function playMusic(track, pause = false) {
 }
 
 async function displayAlbums() {
-    console.log("\ud83c\udfa8 Displaying albums...");
-    let res = await fetch("songs/");
-    let html = await res.text();
-    let div = document.createElement("div");
-    div.innerHTML = html;
-    let anchors = div.getElementsByTagName("a");
+    console.log("🎨 Displaying albums.");
     let cardContainer = document.querySelector(".cardContainer");
+    cardContainer.innerHTML = "";
 
-    for (let anchor of anchors) {
-        if (anchor.href.includes("/songs/") && !anchor.href.endsWith(".mp3")) {
-            let folder = decodeURIComponent(anchor.href.split("/songs/")[1].replace("/", ""));
-            try {
-                let metadata = await fetch(`songs/${folder}/info.json`).then(r => r.json());
-                cardContainer.innerHTML += `<div class="card" data-folder="${folder}">
-                    <div class="play"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 20V4L19 12L5 20Z" fill="#000" stroke="#141B34" stroke-width="1.5"/></svg></div>
-                    <img src="songs/${folder}/cover.jpg" alt="">
-                    <h2>${metadata.title}</h2>
-                    <p>${metadata.description}</p>
-                </div>`;
-            } catch (err) {
-                console.warn(`No info.json in ${folder}`);
-            }
+    for (const folder of moods) {
+        try {
+            let metadata = await fetch(`songs/${folder}/info.json`).then(r => r.json());
+            cardContainer.innerHTML += `<div class="card" data-folder="${folder}">
+                <div class="play"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 20V4L19 12L5 20Z" fill="#000" stroke="#141B34" stroke-width="1.5"/></svg></div>
+                <img src="songs/${folder}/cover.jpg" alt="">
+                <h2>${metadata.title}</h2>
+                <p>${metadata.description}</p>
+            </div>`;
+        } catch (err) {
+            console.warn(`⚠ No info.json in ${folder}`);
         }
     }
 
     document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", async () => {
             const folder = card.dataset.folder;
-            await getSongs(`songs/${folder}`);
+            await getSongs(folder);
             if (songs.length > 0) playMusic(songs[0]);
         });
     });
 }
 
 async function main() {
-    console.log("\ud83d\ude80 Starting player...");
-    try {
-        const res = await fetch("songs/");
-        const html = await res.text();
-        const div = document.createElement("div");
-        div.innerHTML = html;
+    console.log("🚀 Starting player.");
 
-        const firstFolder = Array.from(div.getElementsByTagName("a"))
-            .map(a => {
-                const parts = a.href.split("/songs/");
-                return parts[1] ? decodeURIComponent(parts[1].replace("/", "")) : null;
-            })
-            .find(name => name && !name.includes("."));
-
-        if (firstFolder) {
-            await getSongs(`songs/${firstFolder}`);
-            if (songs.length > 0) playMusic(songs[0], true);
-        } else {
-            console.warn("\u26a0 No valid folder found in /songs/");
-        }
-    } catch (e) {
-        console.error("\u274c Failed to load initial songs:", e);
+    if (moods.length > 0) {
+        const defaultFolder = moods[0];
+        await getSongs(defaultFolder);
+        if (songs.length > 0) playMusic(songs[0], true);
     }
 
     await displayAlbums();
