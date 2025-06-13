@@ -2,7 +2,8 @@ console.log("Let's write JavaScript");
 let currentSong = new Audio();
 let songs = [];
 let currFolder = "";
-const moods = ["sad", "chill", "romantic"]; // ✅ Manually listed
+const moods = ["Chill_(mood)", "Romantic_(mood)", "Sad_(mood)"];
+
 
 function secondsToMinutesSeconds(seconds) {
     if (isNaN(seconds) || seconds < 0) return "00:00";
