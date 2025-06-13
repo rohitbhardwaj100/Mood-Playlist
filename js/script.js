@@ -96,6 +96,8 @@ async function displayAlbums() {
 
 async function main() {
     console.log("🚀 Starting player.");
+    console.log("Moods list:", moods);
+
 
     if (moods.length > 0) {
         const defaultFolder = moods[0];
