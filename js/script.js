@@ -19,6 +19,7 @@ async function getSongs(folder) {
     try {
         const res = await fetch(`songs/${folder}/info.json`);
         const info = await res.json();
+        console.log("🎵 Songs from info.json:", info.songs);
         if (!info.songs || !Array.isArray(info.songs)) throw "No song list";
 
         songs = info.songs;
