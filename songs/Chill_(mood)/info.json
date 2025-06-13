@@ -1,10 +1,7 @@
 {
-  "title": "Sad",
-  "description": "SAD Songs for you",
+  "title": "Chill Vibes",
+  "description": "Relaxing beats to calm your mind.",
   "songs": [
-    "MujhseShaadiKarogi.mp3",
-    "OhLalaRe.mp3",
-    "THEVILLAGERS.mp3"
-    
+    "MujhseShaadiKarogi.mp3"
   ]
 }
